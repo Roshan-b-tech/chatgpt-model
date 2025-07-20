@@ -78,6 +78,7 @@ const MainPrompt = () => {
   };
 
   const handleSend = async () => {
+    console.log("[DEBUG] handleSend called");
     if (text.trim() !== "") {
       const id = nanoid(10);
       const currentMode = fileInfo ? "image" : mode;
@@ -281,10 +282,10 @@ const MainPrompt = () => {
                           option.website === "All"
                             ? handleFocusChange("Focus", "", Filter)
                             : handleFocusChange(
-                                option.website,
-                                option.query,
-                                option.icon
-                              )
+                              option.website,
+                              option.query,
+                              option.icon
+                            )
                         }
                       >
                         <div className={styles.popoverTitleContainer}>
@@ -322,10 +323,10 @@ const MainPrompt = () => {
                               option.website === "All"
                                 ? handleFocusChange("Focus", "", Filter)
                                 : handleFocusChange(
-                                    option.website,
-                                    option.query,
-                                    option.icon
-                                  )
+                                  option.website,
+                                  option.query,
+                                  option.icon
+                                )
                             }
                           >
                             <div className={styles.modalRow}>
