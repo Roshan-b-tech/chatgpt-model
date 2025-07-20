@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./Weather.module.css";
 import { WeatherType } from "@/utils/types";
 import { Skeleton } from "@nextui-org/skeleton";
+import Image from "next/image";
 
 type WeatherProps = {
   weatherResults?: WeatherType;
@@ -20,10 +21,12 @@ const Weather = ({ weatherResults }: WeatherProps) => {
               >{`${weatherResults.current.temperature}°C`}</div>
             </div>
             <div className={styles.weatherInfo}>
-              <img
-                src={`http://openweathermap.org/img/wn/${weatherResults.current.icon}@2x.png`}
-                alt="Current Weather Icon"
-                className={styles.weatherIcon}
+              <Image
+                src={`https://openweathermap.org/img/wn/${weatherResults.current.icon}@2x.png`}
+                alt="icon"
+                width={64}
+                height={64}
+                unoptimized
               />
               <div className={styles.weatherCondition}>
                 {weatherResults.current.weather}
@@ -37,10 +40,12 @@ const Weather = ({ weatherResults }: WeatherProps) => {
             {weatherResults.hourly.map((hour, index) => (
               <div className={styles.hourlyItem} key={index}>
                 <div className={styles.hour}>{`${hour.time}`}</div>
-                <img
-                  src={`http://openweathermap.org/img/wn/${hour.icon}@2x.png`}
-                  alt="Hourly Weather Icon"
-                  className={styles.weatherForcastIcon}
+                <Image
+                  src={`https://openweathermap.org/img/wn/${hour.icon}@2x.png`}
+                  alt="icon"
+                  width={48}
+                  height={48}
+                  unoptimized
                 />
                 <div className={styles.hourTemp}>{`${hour.temperature}°`}</div>
               </div>

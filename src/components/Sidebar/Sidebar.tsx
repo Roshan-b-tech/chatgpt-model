@@ -9,7 +9,7 @@ import Plugins from "../Plugins/Plugins";
 import Profile from "../Profile/Profile";
 import Settings from "../Settings/Settings";
 import Auth from "../Auth/Auth";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import { selectAuthState } from "@/store/authSlice";
 import { useDisclosure } from "@nextui-org/modal";
@@ -30,6 +30,7 @@ import Collapse from "../../../public/svgs/sidebar/Collapse.svg";
 
 const Sidebar = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const authState = useSelector(selectAuthState);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selected, setSelected] = useState("history");
@@ -129,9 +130,8 @@ const Sidebar = () => {
         <>
           <div
             ref={sidebarRef}
-            className={`${styles.container} ${
-              isSidebarOpen && !isClosing ? styles.opening : ""
-            } ${isClosing ? styles.closing : ""}`}
+            className={`${styles.container} ${isSidebarOpen && !isClosing ? styles.opening : ""
+              } ${isClosing ? styles.closing : ""}`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.barContainer}>
@@ -194,6 +194,31 @@ const Sidebar = () => {
                       onClick={() => setSelected("plugins")}
                     />
                   )}
+                  {/* Pro Plan Icon */}
+                  <div
+                    className={
+                      pathname === "/pro"
+                        ? styles.iconActive
+                        : styles.icon
+                    }
+                    style={{
+                      fontSize: 28,
+                      margin: "18px auto 0 auto",
+                      cursor: "pointer",
+                      width: 32,
+                      height: 32,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: pathname === "/pro" ? "#1fb8cd" : "transparent",
+                      borderRadius: 8,
+                      transition: "background 0.2s",
+                    }}
+                    title="Pro Plan"
+                    onClick={() => router.push("/pro")}
+                  >
+                    <span role="img" aria-label="Pro Plan">👑</span>
+                  </div>
                 </div>
                 <div>
                   <Image
@@ -230,9 +255,8 @@ const Sidebar = () => {
           </div>
           {width <= 512 && (
             <div
-              className={`${styles.mobileOverlay} ${
-                isClosing ? styles.mobileOverlayClosing : null
-              }`}
+              className={`${styles.mobileOverlay} ${isClosing ? styles.mobileOverlayClosing : null
+                }`}
             />
           )}
         </>

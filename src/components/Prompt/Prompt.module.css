@@ -18,6 +18,7 @@
   animation: 500ms ease 200ms 1 normal forwards running footer;
   transition: all 1s;
 }
+
 .toolTipContainer {
   position: absolute;
   top: -42px;
@@ -29,6 +30,7 @@
   color: #000000;
   animation: fadeInFromNone 1000ms ease-in-out;
 }
+
 .toolTipContainer::after {
   content: " ";
   position: absolute;
@@ -39,20 +41,24 @@
   border-style: solid;
   border-color: white transparent transparent transparent;
 }
+
 @keyframes fadeInFromNone {
   0% {
     display: none;
     opacity: 0;
   }
+
   1% {
     display: flex;
     opacity: 0;
   }
+
   100% {
     display: flex;
     opacity: 1;
   }
 }
+
 .promptContainer {
   display: flex;
   justify-content: space-between;
@@ -61,6 +67,7 @@
   padding: 8px;
   padding-left: 0px;
 }
+
 .promptText {
   width: 100%;
   height: 27px;
@@ -70,11 +77,13 @@
   border-width: 0px;
   margin-right: 8px;
 }
+
 .promptText:focus {
   outline: none;
   outline-color: transparent;
   box-shadow: none !important;
 }
+
 .sendButton {
   display: flex;
   justify-content: center;
@@ -86,10 +95,12 @@
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .spinner {
   width: 24px;
   height: 24px;
 }
+
 .retryContainer {
   display: flex;
   justify-content: center;
@@ -111,6 +122,7 @@
   cursor: pointer;
   padding-left: 16px;
 }
+
 .forkContainer {
   display: flex;
   justify-content: center;
@@ -132,6 +144,7 @@
   cursor: pointer;
   padding-left: 16px;
 }
+
 .retryButton {
   display: flex;
   justify-content: center;
@@ -143,6 +156,7 @@
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .stopButton {
   display: flex;
   justify-content: center;
@@ -155,11 +169,69 @@
   transition: all 0.2s;
 }
 
+.optionsRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 8px;
+  margin-left: 8px;
+}
+
+.option {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: #bdbdbd;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.option:hover {
+  color: #1fb8cd;
+}
+
+.optionLabel {
+  margin-left: 6px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  background: #232323;
+  border-radius: 12px;
+  padding: 0 12px;
+  height: 48px;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.inputOptions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.inputText {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #bdbdbd;
+  font-size: 17px;
+  margin-left: 16px;
+  outline: none;
+}
+
 @keyframes footer {
   0% {
     opacity: 0;
     transform: translate(-50%, -50%) translateY(80px);
   }
+
   100% {
     opacity: 1;
     transform: translate(-50%, -50%) translateY(0px);

@@ -1,5 +1,4 @@
 import OpenAI from "openai";
-import { OpenAIStream, StreamingTextResponse } from "ai";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -19,7 +18,7 @@ export async function POST(req: Request) {
   } = await req.json();
 
   const response = await openai.chat.completions.create({
-    stream: true,
+    stream: false,
     model: model,
     temperature: temperature,
     max_tokens: max_tokens,
@@ -29,6 +28,6 @@ export async function POST(req: Request) {
     messages: messages,
   });
 
-  const stream = OpenAIStream(response);
-  return new StreamingTextResponse(stream);
+  const answer = response.choices[0].message.content;
+  return new Response(answer, { status: 200 });
 }

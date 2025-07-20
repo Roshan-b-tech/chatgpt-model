@@ -40,7 +40,7 @@ const Dictionary = ({ dictionaryResults }: DictionaryProps) => {
                     >
                       <Player
                         src={AudioLottie}
-                        ref={(el) => (animationRefs.current[index] = el)}
+                        ref={(el) => { animationRefs.current[index] = el; }}
                         loop={false}
                         autoplay={false}
                         className={styles.audio}

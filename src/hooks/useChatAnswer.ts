@@ -11,7 +11,7 @@ import { getInitialMessages } from "../utils/utils";
 import { selectUserDetailsState } from "@/store/authSlice";
 import { selectAI } from "@/store/aiSlice";
 import { store } from "@/store/store";
-import { doc, updateDoc } from "@firebase/firestore";
+import { doc, setDoc } from "@firebase/firestore";
 import { db } from "../../firebaseConfig";
 
 type UseChatAnswerProps = {
@@ -50,10 +50,10 @@ const useChatAnswer = ({
         if (userId) {
           try {
             const chatThreadRef = doc(db, "users", userId, "history", threadId);
-            await updateDoc(chatThreadRef, {
+            await setDoc(chatThreadRef, {
               messages: updatedMessages,
               chats: updatedChats,
-            });
+            }, { merge: true });
           } catch (error) {
             console.error("Error updating chat thread in Firestore:", error);
           }

@@ -18,6 +18,28 @@ type Props = {
   citations: Citation[];
 };
 
+const getDisplayAnswer = (answer: any) => {
+  if (typeof answer === "string") {
+    return answer;
+  }
+  if (Array.isArray(answer)) {
+    // If it's an array of objects with key '0' or similar
+    return answer.map(item => {
+      if (typeof item === "string") return item;
+      if (typeof item === "object" && item !== null) {
+        // Try to join all values in the object
+        return Object.values(item).join(" ");
+      }
+      return String(item);
+    }).join(" ");
+  }
+  if (typeof answer === "object" && answer !== null) {
+    // If it's an object with all keys '0' or similar
+    return Object.values(answer).join(" ");
+  }
+  return String(answer);
+};
+
 const Answer = (props: Props) => {
   const transform = (text: string) => {
     let transformedText = text.replace(/\\\[/g, "$$").replace(/\\\]/g, "$$");
@@ -86,7 +108,7 @@ const Answer = (props: Props) => {
               },
             }}
           >
-            {props.error.length > 0 ? props.error : transform(props.answer)}
+            {props.error.length > 0 ? props.error : transform(getDisplayAnswer(props.answer))}
           </Markdown>
         </div>
       )}
