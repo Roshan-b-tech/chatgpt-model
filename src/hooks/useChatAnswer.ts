@@ -72,6 +72,7 @@ const useChatAnswer = ({
 
     let messages = getInitialMessages(chat, data);
     try {
+      console.log("[DEBUG] About to send POST request to /api/chat", { messages, model: chat?.mode === "image" ? "gpt-4o" : ai.model });
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -182,6 +183,7 @@ const useChatAnswer = ({
     }
 
     try {
+      console.log("[DEBUG] About to send POST request to /api/chat (rewrite)", { messages, model: lastChat.mode === "image" ? "gpt-4o" : ai.model });
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
