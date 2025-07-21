@@ -30,6 +30,7 @@ const Prompt = (props: Props) => {
   const handleEnter = (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && !event.shiftKey && text.trim() !== "") {
       event.preventDefault();
+      console.log("[DEBUG] handleSend called from handleEnter");
       props.handleSend(text, file, focus);
       setText("");
       setFile(null);
@@ -87,8 +88,14 @@ const Prompt = (props: Props) => {
               placeholder="Ask anything..."
               className={styles.inputText}
               value={text}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={handleEnter}
+              onChange={(e) => {
+                console.log("[DEBUG] input changed", e.target.value);
+                setText(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                console.log("[DEBUG] key down", e.key);
+                handleEnter(e);
+              }}
             />
             {props.streaming ? (
               <div className={styles.stopButton} onClick={props.handleCancel}>
@@ -107,6 +114,7 @@ const Prompt = (props: Props) => {
                   width={24}
                   height={24}
                   onClick={() => {
+                    console.log("[DEBUG] send button clicked in Prompt");
                     if (text.trim() !== "" || file) {
                       props.handleSend(text, file, focus);
                       setText("");
