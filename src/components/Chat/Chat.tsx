@@ -64,6 +64,7 @@ const Chat = (props: Props) => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    console.log("debug4: useEffect running. chatThread:", chatThread);
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollIntoView({ behavior: "smooth" });
     }
@@ -195,6 +196,7 @@ const Chat = (props: Props) => {
   const chatIdCounterRef = useRef<number>(0);
 
   useEffect(() => {
+    console.log("debug4: useEffect running. chatThread:", chatThread);
     const processChatThread = async () => {
       if (chatThread && chatThread.chats.length > 0) {
         const lastChatIndex = chatThread.chats.length - 1;
