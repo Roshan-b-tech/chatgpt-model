@@ -1,3 +1,5 @@
+"use client";
+
 import Chat from "@/components/Chat/Chat";
 import AuthWrapper from "../../AuthWrapper";
 
