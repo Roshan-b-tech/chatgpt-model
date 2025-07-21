@@ -85,6 +85,7 @@ const Sidebar = () => {
   };
 
   const toggleSidebar = () => {
+    console.log("Sidebar toggle clicked. isSidebarOpen:", isSidebarOpen);
     if (isSidebarOpen) {
       closeSidebar();
     } else {
