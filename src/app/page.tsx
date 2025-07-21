@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import styles from "@/styles/Home.module.css";
 import AuthWrapper from "./AuthWrapper";
 import MainPrompt from "../components/MainPrompt/MainPrompt";
