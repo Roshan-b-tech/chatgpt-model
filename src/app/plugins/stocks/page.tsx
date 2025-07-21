@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 
 const API_KEY = process.env.NEXT_PUBLIC_ALPHA_VANTAGE_API_KEY;
