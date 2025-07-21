@@ -61,11 +61,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={inter.className}>
-        <Providers>
-          <Sidebar />
-          {children}
-        </Providers>
+      <body>
+        {children}
       </body>
     </html>
   );

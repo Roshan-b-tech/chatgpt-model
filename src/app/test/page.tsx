@@ -1,5 +1,5 @@
 "use client";
 export default function Test() {
-    console.log("Test page loaded");
+    console.log("HYDRATE TEST");
     return <div>Test Page</div>;
 } 
