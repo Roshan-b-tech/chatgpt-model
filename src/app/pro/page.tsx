@@ -1,8 +1,9 @@
 "use client";
 export const dynamic = "force-dynamic";
-import dynamic from "next/dynamic";
 
-const StripeCheckoutButton = dynamic(() => import("@/components/StripeCheckoutButton"), { ssr: false });
+import nextDynamic from "next/dynamic";
+
+const StripeCheckoutButton = nextDynamic(() => import("@/components/StripeCheckoutButton"), { ssr: false });
 
 export default function ProPage() {
     return (
