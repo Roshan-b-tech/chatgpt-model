@@ -7,7 +7,9 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "../store/store";
+import { makeStore } from "../store/store";
+
+const store = makeStore();
 
 export function Providers({ children }: { children: React.ReactNode }) {
   // Only use PersistGate and persistor on the client
@@ -41,6 +43,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       </Provider>
     );
   }
+
+  // Only create persistor on the client
+  const { persistStore } = require("redux-persist");
+  const persistor = persistStore(store);
 
   return (
     <Provider store={store}>
