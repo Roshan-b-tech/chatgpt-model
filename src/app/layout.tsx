@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import type { Viewport } from "next";
 import { Inter } from "next/font/google";
-import { Providers } from "./providers";
+import { Provider } from "react-redux";
+import { store } from "../store/store";
 import "katex/dist/katex.min.css";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar/Sidebar";
+// import Sidebar from "@/components/Sidebar/Sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -62,7 +63,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body>
-        {children}
+        <Provider store={store}>
+          {children}
+        </Provider>
       </body>
     </html>
   );
