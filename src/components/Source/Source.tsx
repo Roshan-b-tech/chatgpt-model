@@ -4,7 +4,8 @@ import styles from "./Source.module.css";
 import File from "../File/File";
 import Search from "../Search/Search";
 import Stock from "../Stock/Stock";
-import Widget from "../Widget/Widget";
+import dynamic from "next/dynamic";
+const Widget = dynamic(() => import("../Widget/Widget"), { ssr: false });
 import Weather from "../Weather/Weather";
 import Dictionary from "../Dictionary/Dictionary";
 import {
