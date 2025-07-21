@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useCallback } from "react";
 import Image from "next/image";
 import styles from "./Search.module.css";
 import { SearchType } from "@/utils/types";
@@ -12,6 +12,8 @@ type SearchProps = {
 const Search = ({ searchResults }: SearchProps) => {
   const webPages = searchResults?.data?.webPages?.value || [];
 
+  const handleOpen = useCallback((url: string) => window.open(url, "_blank"), []);
+
   return (
     <div className={styles.sourceRow}>
       {webPages.length > 0 ? (
@@ -19,7 +21,7 @@ const Search = ({ searchResults }: SearchProps) => {
           <div
             className={styles.sourceBox}
             key={index}
-            onClick={() => window.open(item.url, "_blank")}
+            onClick={() => handleOpen(item.url)}
           >
             <div className={styles.sourceBoxText}>
               {cutString(item.snippet)}
@@ -51,4 +53,4 @@ const Search = ({ searchResults }: SearchProps) => {
   );
 };
 
-export default Search;
+export default memo(Search);

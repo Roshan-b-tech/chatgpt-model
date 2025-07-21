@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, memo, useCallback } from "react";
 import styles from "./Chat.module.css";
 import Source from "../Source/Source";
 import Answer from "../Answer/Answer";
@@ -25,9 +25,26 @@ import useChatFetch from "@/hooks/useChatFetch";
 import useChatFork from "@/hooks/useChatFork";
 import useChatRetry from "@/hooks/useChatRetry";
 import useChatAnswer from "@/hooks/useChatAnswer";
+import { storage } from "../../../firebaseConfig";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 type Props = {
   id: string;
+};
+
+const getCache = (key: string) => {
+  try {
+    const item = localStorage.getItem(key);
+    if (!item) return null;
+    const { data, timestamp } = JSON.parse(item);
+    return { data, timestamp };
+  } catch {
+    return null;
+  }
+};
+
+const setCache = (key: string, data: any) => {
+  localStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() }));
 };
 
 const Chat = (props: Props) => {
@@ -352,27 +369,21 @@ const Chat = (props: Props) => {
     const chat = chatThread?.chats[chatIndex];
     setIsLoading(true);
     setIsCompleted(false);
-
+    const cacheKey = `weather_${location.toLowerCase()}`;
+    const cache = getCache(cacheKey);
+    if (cache && Date.now() - cache.timestamp < 10 * 60 * 1000) {
+      dispatch(updateWeather({ threadId: id, chatIndex, weatherResults: cache.data }));
+      setError("");
+      await handleAnswer(chat, JSON.stringify(cache.data));
+      return;
+    }
     try {
       if (chat?.mode === "weather") {
-        const response = await fetch(
-          `/api/weather?city=${encodeURIComponent(location)}`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch weather data");
-        }
-
+        const response = await fetch(`/api/weather?city=${encodeURIComponent(location)}`);
+        if (!response.ok) throw new Error("Failed to fetch weather data");
         const weatherData = await response.json();
-        console.log("Weather Data:", weatherData);
-
-        dispatch(
-          updateWeather({
-            threadId: id,
-            chatIndex,
-            weatherResults: weatherData,
-          })
-        );
+        setCache(cacheKey, weatherData);
+        dispatch(updateWeather({ threadId: id, chatIndex, weatherResults: weatherData }));
         setError("");
         await handleAnswer(chat, JSON.stringify(weatherData));
       } else {
@@ -389,27 +400,21 @@ const Chat = (props: Props) => {
     const chat = chatThread?.chats[chatIndex];
     setIsLoading(true);
     setIsCompleted(false);
-
+    const cacheKey = `stock_${stock.toUpperCase()}`;
+    const cache = getCache(cacheKey);
+    if (cache && Date.now() - cache.timestamp < 5 * 60 * 1000) {
+      dispatch(updateStock({ threadId: id, chatIndex, stocksResults: cache.data }));
+      setError("");
+      await handleAnswer(chat, JSON.stringify(cache.data));
+      return;
+    }
     try {
       if (chat?.mode === "stock") {
-        const response = await fetch(
-          `/api/stock?symbol=${encodeURIComponent(stock)}`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch weather data");
-        }
-
+        const response = await fetch(`/api/stock?symbol=${encodeURIComponent(stock)}`);
+        if (!response.ok) throw new Error("Failed to fetch weather data");
         const stocksData = await response.json();
-        console.log("stock Data:", stocksData);
-
-        dispatch(
-          updateStock({
-            threadId: id,
-            chatIndex,
-            stocksResults: stocksData,
-          })
-        );
+        setCache(cacheKey, stocksData);
+        dispatch(updateStock({ threadId: id, chatIndex, stocksResults: stocksData }));
         setError("");
         await handleAnswer(chat, JSON.stringify(stocksData));
       } else {
@@ -426,27 +431,21 @@ const Chat = (props: Props) => {
     const chat = chatThread?.chats[chatIndex];
     setIsLoading(true);
     setIsCompleted(false);
-
+    const cacheKey = `dictionary_${word.toLowerCase()}`;
+    const cache = getCache(cacheKey);
+    if (cache && Date.now() - cache.timestamp < 24 * 60 * 60 * 1000) {
+      dispatch(updateDictionary({ threadId: id, chatIndex, dictionaryResults: cache.data }));
+      setError("");
+      await handleAnswer(chat, JSON.stringify(cache.data));
+      return;
+    }
     try {
       if (chat?.mode === "dictionary") {
-        const response = await fetch(
-          `/api/dictionary?word=${encodeURIComponent(word)}`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch weather data");
-        }
-
+        const response = await fetch(`/api/dictionary?word=${encodeURIComponent(word)}`);
+        if (!response.ok) throw new Error("Failed to fetch weather data");
         const dictionaryData = await response.json();
-        console.log("dictionary Data:", dictionaryData);
-
-        dispatch(
-          updateDictionary({
-            threadId: id,
-            chatIndex,
-            dictionaryResults: dictionaryData,
-          })
-        );
+        setCache(cacheKey, dictionaryData);
+        dispatch(updateDictionary({ threadId: id, chatIndex, dictionaryResults: dictionaryData }));
         setError("");
         await handleAnswer(chat, JSON.stringify(dictionaryData));
       } else {
@@ -459,13 +458,26 @@ const Chat = (props: Props) => {
     }
   };
 
-  const handleSend = (text: string) => {
+  const handleSend = async (text: string, file?: File | null) => {
     if (text.trim() !== "") {
+      let fileInfo = undefined;
+      if (file) {
+        const fileRef = ref(storage, `uploads/${Date.now()}_${file.name}`);
+        await uploadBytes(fileRef, file);
+        const url = await getDownloadURL(fileRef);
+        fileInfo = {
+          name: file.name,
+          size: file.size,
+          date: new Date().toISOString(),
+          url,
+        };
+      }
       const newChat: ChatType = {
-        mode: "",
+        mode: file ? "image" : "",
         query: text.trim(),
         question: text,
         answer: "",
+        ...(fileInfo && { fileInfo }),
       };
       dispatch(addChat({ threadId: id, chat: newChat }));
     }
@@ -512,6 +524,7 @@ const Chat = (props: Props) => {
                 answer={chat.answer}
                 isLoading={isLoading && index === chatThread.chats.length - 1}
                 citations={generateCitations(chat)}
+                fileInfo={chat.fileInfo}
               />
               {index === chatThread.chats.length - 1 &&
                 !isLoading &&
@@ -552,4 +565,4 @@ const Chat = (props: Props) => {
   );
 };
 
-export default Chat;
+export default memo(Chat);

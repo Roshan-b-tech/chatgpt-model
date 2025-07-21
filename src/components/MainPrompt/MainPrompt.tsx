@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Image, { StaticImageData } from "next/image";
 import styles from "./MainPrompt.module.css";
-import Auth from "../Auth/Auth";
+import dynamic from "next/dynamic";
 import SpinnerWhite from "../SpinnerWhite/SpinnerWhite";
 import toast from "react-hot-toast";
 import Sheet from "react-modal-sheet";
@@ -28,6 +28,8 @@ import FileActive from "../../../public/svgs/FileActive.svg";
 import Clip from "../../../public/svgs/Clip.svg";
 import Check from "../../../public/svgs/Check.svg";
 import CrossRed from "../../../public/svgs/CrossRed.svg";
+
+const Auth = dynamic(() => import("../Auth/Auth"), { ssr: false });
 
 const MainPrompt = () => {
   const dispatch = useDispatch();
@@ -61,23 +63,26 @@ const MainPrompt = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleFocusChange = (
-    website: string,
-    query: string,
-    icon: StaticImageData
-  ) => {
-    if (website === "Focus") {
-      setMode("");
-    } else if (website === "Writing") {
-      setMode("chat");
-    } else {
-      setMode("search");
-    }
-    setFocus({ website, icon, query });
-    setOpen(false);
-  };
+  const handleFocusChange = useCallback(
+    (
+      website: string,
+      query: string,
+      icon: StaticImageData
+    ) => {
+      if (website === "Focus") {
+        setMode("");
+      } else if (website === "Writing") {
+        setMode("chat");
+      } else {
+        setMode("search");
+      }
+      setFocus({ website, icon, query });
+      setOpen(false);
+    },
+    [setMode, setFocus, setOpen]
+  );
 
-  const handleSend = async () => {
+  const handleSend = useCallback(async () => {
     console.log("[DEBUG] handleSend called");
     if (text.trim() !== "") {
       const id = nanoid(10);
@@ -121,25 +126,25 @@ const MainPrompt = () => {
       dispatch(createChatThread({ id, chat: chatObject }));
       router.push(`/chat/${id}`);
     } else return;
-  };
+  }, [text, fileInfo, mode, focus.query, userId, dispatch, router]);
 
-  const handleEnter = (event: React.KeyboardEvent) => {
+  const handleEnter = useCallback((event: React.KeyboardEvent) => {
     if (event.key === "Enter" && !event.shiftKey && text.trim() !== "") {
       event.preventDefault();
       handleSend();
     } else if (event.key === "Enter" && event.shiftKey) {
     }
-  };
+  }, [text, handleSend]);
 
-  const handleInput = (e: any) => {
+  const handleInput = useCallback((e: any) => {
     const target = e.target;
     setText(target.value);
     target.style.height = "auto";
     const maxHeight = 512;
     target.style.height = `${Math.min(target.scrollHeight, maxHeight)}px`;
-  };
+  }, [setText]);
 
-  const handleFile = async () => {
+  const handleFile = useCallback(async () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "image/png,image/jpeg,image/jpg";
@@ -222,16 +227,16 @@ const MainPrompt = () => {
     });
 
     fileInput.click();
-  };
+  }, [userId, setLoading, setButtonText, setFileInfo]);
 
-  const handleModal = () => {
+  const handleModal = useCallback(() => {
     if (authState) {
       handleFile();
     } else {
       setModal("auth");
       onOpen();
     }
-  };
+  }, [authState, handleFile, onOpen, setModal]);
 
   return (
     <div className={styles.container}>

@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, memo } from "react";
 import styles from "./Library.module.css";
 import Image from "next/image";
-import Auth from "../Auth/Auth";
+import dynamic from "next/dynamic";
 import SpinnerWhite from "../SpinnerWhite/SpinnerWhite";
 import { Skeleton } from "@nextui-org/skeleton";
 import { useDisclosure } from "@nextui-org/modal";
@@ -22,6 +22,8 @@ import { db } from "../../../firebaseConfig";
 
 import Bin from "../../../public/svgs/Bin.svg";
 import FolderInactive from "../../../public/svgs/sidebar/Folder_Inactive.svg";
+
+const Auth = dynamic(() => import("../Auth/Auth"), { ssr: false });
 
 const Library = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -53,18 +55,18 @@ const Library = () => {
     fetchLibraryData();
   }, [isAuthenticated, userDetails.uid, fetchLibraryData]);
 
-  const handleDelete = async (itemId: string) => {
+  const handleDelete = useCallback(async (itemId: string) => {
     if (isAuthenticated && userDetails.uid) {
       setDeleting(true);
       await deleteDoc(doc(db, "users", userDetails.uid, "library", itemId));
       fetchLibraryData();
       setDeleting(false);
     }
-  };
+  }, [isAuthenticated, userDetails.uid, fetchLibraryData]);
 
-  const handleAuth = () => {
+  const handleAuth = useCallback(() => {
     onOpen();
-  };
+  }, [onOpen]);
 
   return (
     <div className={styles.list}>
@@ -140,4 +142,4 @@ const Library = () => {
   );
 };
 
-export default Library;
+export default memo(Library);

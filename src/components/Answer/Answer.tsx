@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useCallback } from "react";
 import styles from "./Answer.module.css";
 import Image from "next/image";
 import Markdown from "react-markdown";
@@ -40,7 +40,7 @@ const getDisplayAnswer = (answer: any) => {
   return String(answer);
 };
 
-const Answer = (props: Props) => {
+const Answer = (props: Props & { fileInfo?: { url: string; name: string } }) => {
   const transform = (text: string) => {
     let transformedText = text.replace(/\\\[/g, "$$").replace(/\\\]/g, "$$");
 
@@ -74,6 +74,12 @@ const Answer = (props: Props) => {
         <Image src={Logo} alt="Omniplex" className={styles.answerImg} />
         <p className={styles.answerText}>Answer</p>
       </div>
+      {/* Show image if fileInfo is present */}
+      {props.fileInfo?.url && (
+        <div className={styles.answerImageContainer}>
+          <Image src={props.fileInfo.url} alt={props.fileInfo.name || "Attachment"} width={320} height={320} style={{ objectFit: "contain", borderRadius: 8 }} />
+        </div>
+      )}
       {props.isLoading ? (
         <div>
           <Skeleton className={styles.skeletonAnswer} />
@@ -116,4 +122,4 @@ const Answer = (props: Props) => {
   );
 };
 
-export default Answer;
+export default memo(Answer);

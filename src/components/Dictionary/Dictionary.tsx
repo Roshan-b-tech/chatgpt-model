@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, memo, useCallback } from "react";
 import styles from "./Dictionary.module.css";
 import { DictionaryType } from "@/utils/types";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -13,7 +13,7 @@ type DictionaryProps = {
 const Dictionary = ({ dictionaryResults }: DictionaryProps) => {
   const animationRefs = useRef<any[]>([]);
 
-  const handlePlaySound = (audioUrl: string, index: number) => {
+  const handlePlaySound = useCallback((audioUrl: string, index: number) => {
     if (audioUrl) {
       const audio = new Audio(audioUrl);
       audio.play();
@@ -22,7 +22,7 @@ const Dictionary = ({ dictionaryResults }: DictionaryProps) => {
         animationRefs.current[index].pause();
       };
     }
-  };
+  }, []);
 
   return (
     <>
@@ -96,4 +96,4 @@ const Dictionary = ({ dictionaryResults }: DictionaryProps) => {
   );
 };
 
-export default Dictionary;
+export default memo(Dictionary);

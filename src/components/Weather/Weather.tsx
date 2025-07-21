@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useCallback } from "react";
 import styles from "./Weather.module.css";
 import { WeatherType } from "@/utils/types";
 import { Skeleton } from "@nextui-org/skeleton";
@@ -98,4 +98,4 @@ const Weather = ({ weatherResults }: WeatherProps) => {
   );
 };
 
-export default Weather;
+export default memo(Weather);

@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, memo } from "react";
 import styles from "./History.module.css";
 import Image from "next/image";
-import Auth from "../Auth/Auth";
+import dynamic from "next/dynamic";
 import SpinnerWhite from "../SpinnerWhite/SpinnerWhite";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@nextui-org/skeleton";
@@ -23,6 +23,7 @@ import {
   deleteDoc,
   doc,
   Timestamp,
+  limit,
 } from "firebase/firestore";
 import { db } from "../../../firebaseConfig";
 
@@ -33,6 +34,8 @@ import ChatInactive from "../../../public/svgs/sidebar/Chat_Inactive.svg";
 interface ChatThreadWithTimestamp extends ChatThread {
   createdAt: Timestamp;
 }
+
+const Auth = dynamic(() => import("../Auth/Auth"), { ssr: false });
 
 const History = () => {
   const router = useRouter();
@@ -47,7 +50,7 @@ const History = () => {
     if (isAuthenticated && userDetails.uid) {
       setLoading(true);
       const historyRef = collection(db, "users", userDetails.uid, "history");
-      const q = query(historyRef, orderBy("createdAt", "desc"));
+      const q = query(historyRef, orderBy("createdAt", "desc"), limit(20));
       const querySnapshot = await getDocs(q);
       const history = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -171,4 +174,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default memo(History);

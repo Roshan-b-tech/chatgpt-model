@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useCallback } from "react";
 import styles from "./Plugins.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -37,6 +37,8 @@ const Plugins = () => {
     onOpen();
   };
 
+  const handlePluginClick = useCallback((url: string) => router.push(url), [router]);
+
   const groupedPlugins = groupByTag(PLUGINS);
 
   return (
@@ -56,7 +58,7 @@ const Plugins = () => {
                   key={index}
                   className={styles.listItem}
                   style={{ opacity: item.comingSoon ? 0.75 : 1 }}
-                  onClick={() => router.push(item.url)}
+                  onClick={() => handlePluginClick(item.url)}
                 >
                   <div className={styles.listIconContainer}>
                     {/* <Image
@@ -101,4 +103,4 @@ const Plugins = () => {
   );
 };
 
-export default Plugins;
+export default memo(Plugins);

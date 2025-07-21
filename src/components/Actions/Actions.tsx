@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Actions.module.css";
 import Image from "next/image";
-import ShareModal from "../Share/Share";
+import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
 import { useDisclosure } from "@nextui-org/react";
 import { Chat, ChatThread } from "@/utils/types";
@@ -18,6 +18,8 @@ type Props = {
   rewrite: () => void;
   chatThread: ChatThread;
 };
+
+const ShareModal = dynamic(() => import("../Share/Share"), { ssr: false });
 
 const Actions = (props: Props) => {
   const authState = useSelector(selectAuthState);

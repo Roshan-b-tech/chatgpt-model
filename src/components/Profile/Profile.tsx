@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
 import { useDisclosure } from "@nextui-org/modal";
-import Delete from "../Delete/Delete";
+import dynamic from "next/dynamic";
 import { getAuth, signOut } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { resetAISettings } from "@/store/aiSlice";
@@ -16,6 +16,8 @@ import User from "../../../public/svgs/sidebar/User.svg";
 type Props = {
   close: () => void;
 };
+
+const Delete = dynamic(() => import("../Delete/Delete"), { ssr: false });
 
 const Plugins = (props: Props) => {
   const router = useRouter();

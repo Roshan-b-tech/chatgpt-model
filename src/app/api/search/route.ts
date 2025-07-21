@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BING_API_KEY = process.env.BING_API_KEY;
-const BING_SEARCH_URL = "https://api.bing.microsoft.com/v7.0/search";
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GOOGLE_CX = process.env.GOOGLE_CX;
+const GOOGLE_SEARCH_URL = "https://www.googleapis.com/customsearch/v1";
 
 export const runtime = "edge";
 
@@ -18,35 +19,27 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  if (!BING_API_KEY) {
-    console.error(
-      "Bing API key is undefined. Please check your .env.local file."
-    );
+  if (!GOOGLE_API_KEY || !GOOGLE_CX) {
+    console.error("Google API key or CX is undefined. Please check your .env.local file.");
     return new NextResponse(
-      JSON.stringify({ message: "Bing API key is not configured." }),
+      JSON.stringify({ message: "Google API key or CX is not configured." }),
       { status: 500 }
     );
   }
 
   try {
     const response = await fetch(
-      `${BING_SEARCH_URL}?q=${encodeURIComponent(q)}`,
-      {
-        method: "GET",
-        headers: new Headers({
-          "Ocp-Apim-Subscription-Key": BING_API_KEY,
-        }),
-      }
+      `${GOOGLE_SEARCH_URL}?key=${GOOGLE_API_KEY}&cx=${GOOGLE_CX}&q=${encodeURIComponent(q)}`
     );
 
     if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
+      throw new Error(`Google API request failed with status ${response.status}`);
     }
 
     const data = await response.json();
     return NextResponse.json({ message: "Success", data });
   } catch (error) {
-    console.error("Bing API request error:", error);
+    console.error("Google API request error:", error);
     return new NextResponse(
       JSON.stringify({ message: "Internal Server Error" }),
       { status: 500 }

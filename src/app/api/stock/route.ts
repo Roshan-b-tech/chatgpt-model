@@ -85,7 +85,10 @@ export async function GET(req: NextRequest) {
 
     return new NextResponse(JSON.stringify(structData), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "public, max-age=300, stale-while-revalidate=60"
+      }
     });
   } catch (error) {
     console.error("Error fetching stock data", error);

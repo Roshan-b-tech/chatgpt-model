@@ -8,7 +8,7 @@ import Library from "../Library/Library";
 import Plugins from "../Plugins/Plugins";
 import Profile from "../Profile/Profile";
 import Settings from "../Settings/Settings";
-import Auth from "../Auth/Auth";
+import dynamic from "next/dynamic";
 import { useRouter, usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import { selectAuthState } from "@/store/authSlice";
@@ -27,6 +27,8 @@ import Plugin from "../../../public/svgs/sidebar/Plugin_Active.svg";
 import PluginInactive from "../../../public/svgs/sidebar/Plugin_Inactive.svg";
 import User from "../../../public/svgs/sidebar/User.svg";
 import Collapse from "../../../public/svgs/sidebar/Collapse.svg";
+
+const Auth = dynamic(() => import("../Auth/Auth"), { ssr: false });
 
 const Sidebar = () => {
   const router = useRouter();

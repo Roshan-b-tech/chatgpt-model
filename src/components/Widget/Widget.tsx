@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo, useCallback } from "react";
 import styles from "./Widget.module.css";
 import Image from "next/image";
 import { SearchType } from "@/utils/types";
@@ -28,9 +28,9 @@ const Widget = ({ searchResults }: searchProps) => {
     window.open(url, "_blank");
   };
 
-  const handleMediaClick = (type: "picture" | "video") => {
+  const handleMediaClick = useCallback((type: "picture" | "video") => {
     setOpenMedia(type);
-  };
+  }, []);
 
   if (!images && !videos) {
     return null;
@@ -164,4 +164,4 @@ const Widget = ({ searchResults }: searchProps) => {
   );
 };
 
-export default Widget;
+export default memo(Widget);

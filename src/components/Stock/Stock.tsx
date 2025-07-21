@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useCallback } from "react";
 import styles from "./Stock.module.css";
 import { StockType } from "@/utils/types";
 import { AreaChart } from "@tremor/react";
@@ -219,4 +219,4 @@ const Stock = ({ stockResults }: StockProps) => {
   );
 };
 
-export default Stock;
+export default memo(Stock);

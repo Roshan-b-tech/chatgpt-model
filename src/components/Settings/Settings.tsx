@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./Settings.module.css";
 import Image from "next/image";
-import Auth from "../Auth/Auth";
+import dynamic from "next/dynamic";
 import { useDisclosure } from "@nextui-org/modal";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollShadow } from "@nextui-org/scroll-shadow";
@@ -30,6 +30,8 @@ import { MODELS } from "@/utils/data";
 
 import Info from "../../../public/svgs/Info.svg";
 import Selector from "../../../public/svgs/Selector.svg";
+
+const Auth = dynamic(() => import("../Auth/Auth"), { ssr: false });
 
 const Settings = () => {
   const dispatch = useDispatch();

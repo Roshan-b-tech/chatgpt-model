@@ -117,7 +117,13 @@ export async function GET(req: NextRequest) {
       },
     };
 
-    return NextResponse.json(data);
+    return new NextResponse(JSON.stringify(data), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "public, max-age=600, stale-while-revalidate=60"
+      }
+    });
   } catch (error) {
     console.error("API request error:", error);
     return new NextResponse(
