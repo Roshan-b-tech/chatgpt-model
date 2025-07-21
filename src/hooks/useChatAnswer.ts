@@ -65,6 +65,7 @@ const useChatAnswer = ({
   };
 
   const handleAnswer = async (chat: ChatType, data?: string) => {
+    console.log("[DEBUG] handleAnswer called", { chat, data });
     setIsLoading(true);
     setIsCompleted(false);
     const newController = new AbortController();
@@ -87,6 +88,7 @@ const useChatAnswer = ({
         }),
         signal: newController.signal,
       });
+      console.log("[DEBUG] /api/chat response status:", response.status);
 
       if (!response.ok) {
         setError("Something went wrong. Please try again later.");

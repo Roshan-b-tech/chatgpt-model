@@ -1,4 +1,5 @@
 export const handleMode = async (text: string) => {
+  console.log("[DEBUG] handleMode called with text:", text);
   try {
     const response = await fetch("/api/tools", {
       method: "POST",

@@ -409,7 +409,10 @@ const MainPrompt = () => {
               alt="Arrow"
               width={24}
               height={24}
-              onClick={handleSend}
+              onClick={() => {
+                console.log("[DEBUG] send button clicked");
+                handleSend();
+              }}
             />
           </div>
         </div>
