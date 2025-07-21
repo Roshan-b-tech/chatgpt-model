@@ -11,7 +11,7 @@ import { makeStore } from "../store/store";
 
 const store = makeStore();
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({ children }: { children: React.ReactNode }) {
   // Only use PersistGate and persistor on the client
   if (typeof window === "undefined") {
     return (
