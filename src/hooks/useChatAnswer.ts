@@ -10,7 +10,6 @@ import { Chat as ChatType, ChatThread, Message } from "../utils/types";
 import { getInitialMessages } from "../utils/utils";
 import { selectUserDetailsState } from "@/store/authSlice";
 import { selectAI } from "@/store/aiSlice";
-import { store } from "@/store/store";
 import { doc, setDoc } from "@firebase/firestore";
 import { db } from "../../firebaseConfig";
 
@@ -37,14 +36,15 @@ const useChatAnswer = ({
   const userDetails = useSelector(selectUserDetailsState);
   const ai = useSelector(selectAI);
   const userId = userDetails.uid;
+  // Use useSelector to get the latest chatThread state
+  const latestChatThread = useSelector((state: any) => selectChatThread(state, threadId));
 
   const [controller, setController] = useState<AbortController | null>(null);
 
   const handleSave = async () => {
     if (userId) {
       try {
-        const updatedState = store.getState();
-        const updatedChatThread = selectChatThread(updatedState, threadId);
+        const updatedChatThread = latestChatThread;
         const updatedChats = updatedChatThread?.chats || [];
         const updatedMessages = updatedChatThread?.messages || [];
         if (userId) {
